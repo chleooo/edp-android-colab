@@ -1,209 +1,187 @@
 package com.example.myapplication
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Class
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.School
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.R // Explicit import for resources
-import com.example.myapplication.ui.theme.LocalBackgroundGradient
-import com.example.myapplication.ui.theme.ProfileTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen() {
-    Scaffold(
-        containerColor = Color.Transparent, // Transparent scaffold lets gradient show through
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "My Profile",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { /* Handle Navigation */ }) {
-                        Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /* Handle Options */ }) {
-                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Options")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                    actionIconContentColor = MaterialTheme.colorScheme.onSurface
-                )
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* Handle Add Action */ },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add contact")
-            }
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(LocalBackgroundGradient.current)
-                .padding(innerPadding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Region B: Avatar + status badge (Loads the local profile image resource)
-            Box(
-                modifier = Modifier
-                    .size(140.dp)
-                    .padding(8.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.monteza),
-                    contentDescription = "Profile Picture",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape)
-                        .border(3.dp, MaterialTheme.colorScheme.primary, CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.BottomEnd)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
-                        .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
-                )
-            }
-
-            // Region C: Name & Role
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(
-                    text = "Chloe Nicole Monteza",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "UX/UI Design",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            // Region E: Stats Card
-
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f)
-                ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    ContactRow(icon = Icons.Default.Email, detail = "cnmonteza64178@liceo.edu.ph")
-                    ContactRow(icon = Icons.Default.LocationOn, detail = "Misamis Oriental, Philippines")
-                    ContactRow(icon = Icons.Default.Class, detail = "BSIT 3-2" )
-                    ContactRow(icon = Icons.Default.Phone, detail = "09103589882" )
-                    ContactRow(icon = Icons.Default.School, detail = "Liceo De Cagayan University" )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun StatItem(count: String, label: String) {
     Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Task 2 — Circular Avatar Initials Placeholder (CM)
+        Box(
+            modifier = Modifier
+                .size(120.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
+                .border(2.dp, MaterialTheme.colorScheme.onPrimary, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "CM",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.headlineSmall
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Task 3 — Name & Course/Section
         Text(
-            text = count,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            text = "Chloe Nicole Monteza",
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.primary
         )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
         Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
+            text = "BSIT 3 - 2",
+            style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Task 4 — Material 3 Card
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                // Task 5 — 5 Reusable InfoRows
+                InfoRow(
+                    icon = Icons.Default.Person,
+                    label = "Full Name",
+                    value = "Chloe Nicole Monteza"
+                )
+                InfoRow(
+                    icon = Icons.Default.School,
+                    label = "Course",
+                    value = "BS Information Technology"
+                )
+                InfoRow(
+                    icon = Icons.Default.Star,
+                    label = "Section",
+                    value = "3 - 2"
+                )
+                InfoRow(
+                    icon = Icons.Default.Phone,
+                    label = "Mobile Number",
+                    value = "+63 910 358 9882"
+                )
+                InfoRow(
+                    icon = Icons.Default.Email,
+                    label = "Email Address",
+                    value = "cnmonteza64178@liceo.edu.ph"
+                )
+            }
+        }
     }
 }
 
+// Task 5 — Reusable InfoRow Composable
 @Composable
-fun ContactRow(icon: androidx.compose.ui.graphics.vector.ImageVector, detail: String) {
+fun InfoRow(
+    icon: ImageVector,
+    label: String,
+    value: String
+) {
     Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp)
+            contentDescription = label,
+            tint = MaterialTheme.colorScheme.primary
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = detail,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
     }
 }
 
-// Preview Functions
-@Preview(name = "Light Mode", showBackground = true)
+
+
+@Preview(name = "Profile - Light", showBackground = true)
 @Composable
 fun ProfileScreenLightPreview() {
-    ProfileTheme(darkTheme = false) {
-        ProfileScreen()
+    ProfileCardLabTheme(darkTheme = false) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            ProfileScreen()
+        }
     }
 }
 
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(
+    name = "Profile - Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun ProfileScreenDarkPreview() {
-    ProfileTheme(darkTheme = true) {
-        ProfileScreen()
+    ProfileCardLabTheme(darkTheme = true) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            ProfileScreen()
+        }
     }
 }
