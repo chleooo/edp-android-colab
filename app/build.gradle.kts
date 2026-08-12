@@ -47,6 +47,14 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
+    dependencies {
+        val lifecycleVersion = "2.10.0";
+// Lets you call viewModel() inside a Composable
+        implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+// Lets you use collectAsStateWithLifecycle()
+        implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
+    }
+
     // Icon pack needed for the UI Mockup (Region A & F)
     implementation("androidx.compose.material:material-icons-extended")
 
