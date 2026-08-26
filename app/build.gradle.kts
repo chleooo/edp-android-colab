@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.midtermexam"
+    namespace = "com.example.myapplication"
     compileSdk {
         version = release(37) {
             minorApiLevel = 1
@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.myapplication"
-        minSdk = 26
-        targetSdk = 37
+        minSdk = 37
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -38,6 +38,9 @@ android {
 }
 
 dependencies {
+    implementation("androidx.navigation:navigation-compose:2.9.8")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
@@ -53,7 +56,4 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation("androidx.navigation:navigation-compose:2.8.8")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
 }

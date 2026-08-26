@@ -16,62 +16,132 @@ fun DishDetailScreen(
     viewModel: DishViewModel,
     onBack: () -> Unit
 ) {
+
     val dishes by viewModel.dishes.collectAsStateWithLifecycle()
-    val dish = dishes.find { it.id == dishId }
+
+    val dish = dishes.find {
+        it.id == dishId
+    }
 
     if (dish == null) {
         Text("Dish not found")
         return
     }
 
-    var newStep by remember { mutableStateOf("") }
-    var stepBeingEdited by remember { mutableStateOf<Recipe?>(null) }
+    var newStep by remember {
+        mutableStateOf("")
+    }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    var stepBeingEdited by remember {
+        mutableStateOf<Recipe?>(null)
+    }
 
-        TextButton(onClick = onBack) { Text("< Back") }
-        Text(dish.name, style = MaterialTheme.typography.headlineMedium)
-        Text("Recipe steps", style = MaterialTheme.typography.bodyMedium)
-        Spacer(Modifier.height(12.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        TextButton(
+            onClick = onBack
+        ) {
+            Text("< Back")
+        }
+
+        Text(
+            text = dish.name,
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Text(
+            text = "Recipe steps",
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
             OutlinedTextField(
                 value = newStep,
-                onValueChange = { newStep = it },
-                label = { Text("New step") },
+                onValueChange = {
+                    newStep = it
+                },
+                label = {
+                    Text("New step")
+                },
                 singleLine = true,
                 modifier = Modifier.weight(1f)
             )
-            Spacer(Modifier.width(8.dp))
-            Button(onClick = {
-                viewModel.addRecipe(dishId, newStep)
-                newStep = ""
-            }) {
-                Text("Add Step")
+
+            Spacer(
+                modifier = Modifier.width(8.dp)
+            )
+
+            Button(
+                onClick = {
+
+                    viewModel.addRecipe(
+                        dishId,
+                        newStep
+                    )
+
+                    newStep = ""
+                }
+            ) {
+                Text("Add")
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.weight(1f)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            itemsIndexed(items = dish.recipes, key = { _, r -> r.id }) { index, recipe ->
-                Card(modifier = Modifier.fillMaxWidth()) {
+
+            itemsIndexed(
+                items = dish.recipes,
+                key = { _, recipe ->
+                    recipe.id
+                }
+            ) { index, recipe ->
+
+                Card(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
                     Row(
                         modifier = Modifier.padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+
                         Text(
                             text = "${index + 1}. ${recipe.text}",
-                            style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.weight(1f)
                         )
-                        TextButton(onClick = { stepBeingEdited = recipe }) {
+
+                        TextButton(
+                            onClick = {
+                                stepBeingEdited = recipe
+                            }
+                        ) {
                             Text("Edit")
                         }
-                        TextButton(onClick = { viewModel.deleteRecipe(dishId, recipe.id) }) {
+
+                        TextButton(
+                            onClick = {
+                                viewModel.deleteRecipe(
+                                    dishId,
+                                    recipe.id
+                                )
+                            }
+                        ) {
                             Text("Delete")
                         }
                     }
@@ -80,17 +150,28 @@ fun DishDetailScreen(
         }
     }
 
-    // TODO 11 -- UPDATE
     val editing = stepBeingEdited
+
     if (editing != null) {
+
         EditDialog(
-            title = "Edit step",
+            title = "Edit recipe step",
             initialText = editing.text,
-            onConfirm = { updatedText ->
-                viewModel.updateRecipe(dishId, editing.id, updatedText)
+
+            onConfirm = { newText ->
+
+                viewModel.updateRecipe(
+                    dishId,
+                    editing.id,
+                    newText
+                )
+
                 stepBeingEdited = null
             },
-            onDismiss = { stepBeingEdited = null }
+
+            onDismiss = {
+                stepBeingEdited = null
+            }
         )
     }
 }

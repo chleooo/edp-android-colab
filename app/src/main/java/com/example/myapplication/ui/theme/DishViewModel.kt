@@ -13,14 +13,19 @@ class DishViewModel : ViewModel() {
             Dish(id = 2, name = "Sinigang na Baboy")
         )
     )
+
     val dishes: StateFlow<List<Dish>> = _dishes.asStateFlow()
 
     private var nextId = 100
 
-
     fun addDish(name: String) {
         if (name.isBlank()) return
-        val newDish = Dish(id = nextId++, name = name.trim())
+
+        val newDish = Dish(
+            id = nextId++,
+            name = name.trim()
+        )
+
         _dishes.value = _dishes.value + newDish
     }
 
@@ -30,46 +35,76 @@ class DishViewModel : ViewModel() {
 
     fun updateDish(dishId: Int, newName: String) {
         if (newName.isBlank()) return
+
         _dishes.value = _dishes.value.map { dish ->
-            if (dish.id == dishId) dish.copy(name = newName.trim()) else dish
+            if (dish.id == dishId) {
+                dish.copy(name = newName.trim())
+            } else {
+                dish
+            }
         }
     }
 
     fun deleteDish(dishId: Int) {
-        _dishes.value = _dishes.value.filter { it.id != dishId }
+        _dishes.value = _dishes.value.filter { dish ->
+            dish.id != dishId
+        }
     }
-
 
     fun addRecipe(dishId: Int, text: String) {
         if (text.isBlank()) return
-        val newRecipe = Recipe(id = nextId++, text = text.trim())
+
+        val newRecipe = Recipe(
+            id = nextId++,
+            text = text.trim()
+        )
+
         _dishes.value = _dishes.value.map { dish ->
             if (dish.id == dishId) {
-                dish.copy(recipes = dish.recipes + newRecipe)
+                dish.copy(
+                    recipes = dish.recipes + newRecipe
+                )
             } else {
                 dish
             }
         }
     }
 
-    fun updateRecipe(dishId: Int, recipeId: Int, newText: String) {
+    fun updateRecipe(
+        dishId: Int,
+        recipeId: Int,
+        newText: String
+    ) {
         if (newText.isBlank()) return
+
         _dishes.value = _dishes.value.map { dish ->
             if (dish.id == dishId) {
-                val updatedRecipes = dish.recipes.map { recipe ->
-                    if (recipe.id == recipeId) recipe.copy(text = newText.trim()) else recipe
-                }
-                dish.copy(recipes = updatedRecipes)
+                dish.copy(
+                    recipes = dish.recipes.map { recipe ->
+                        if (recipe.id == recipeId) {
+                            recipe.copy(text = newText.trim())
+                        } else {
+                            recipe
+                        }
+                    }
+                )
             } else {
                 dish
             }
         }
     }
 
-    fun deleteRecipe(dishId: Int, recipeId: Int) {
+    fun deleteRecipe(
+        dishId: Int,
+        recipeId: Int
+    ) {
         _dishes.value = _dishes.value.map { dish ->
             if (dish.id == dishId) {
-                dish.copy(recipes = dish.recipes.filter { it.id != recipeId })
+                dish.copy(
+                    recipes = dish.recipes.filter { recipe ->
+                        recipe.id != recipeId
+                    }
+                )
             } else {
                 dish
             }

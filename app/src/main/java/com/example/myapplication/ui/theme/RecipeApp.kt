@@ -10,14 +10,19 @@ import androidx.navigation.navArgument
 
 @Composable
 fun RecipeApp() {
+
     val navController = rememberNavController()
+
     val viewModel: DishViewModel = viewModel()
 
     NavHost(
         navController = navController,
         startDestination = "dish_list"
     ) {
-        composable(route = "dish_list") {
+
+        composable(
+            route = "dish_list"
+        ) {
             DishListScreen(
                 viewModel = viewModel,
                 onDishClick = { dishId ->
@@ -28,13 +33,22 @@ fun RecipeApp() {
 
         composable(
             route = "dish_detail/{dishId}",
-            arguments = listOf(navArgument("dishId") { type = NavType.IntType })
+            arguments = listOf(
+                navArgument("dishId") {
+                    type = NavType.IntType
+                }
+            )
         ) { backStackEntry ->
-            val dishId = backStackEntry.arguments?.getInt("dishId") ?: 0
+
+            val dishId =
+                backStackEntry.arguments?.getInt("dishId") ?: 0
+
             DishDetailScreen(
                 dishId = dishId,
                 viewModel = viewModel,
-                onBack = { navController.popBackStack() }
+                onBack = {
+                    navController.popBackStack()
+                }
             )
         }
     }
