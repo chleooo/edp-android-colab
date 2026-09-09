@@ -3,75 +3,124 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-
-
-
-// --- Light Palette ---
-val LiceoMaroonPrimary = Color(0xFF800000)          // Liceo Deep Maroon
-val LiceoOnPrimary = Color(0xFFFFFFFF)              // Text/Icon on Maroon
-val LiceoGoldSecondary = Color(0xFFD4AF37)          // Gold Accent
-val LiceoSurfaceLight = Color(0xFFFFF8F6)           // Light warm background
-val LiceoOnSurfaceLight = Color(0xFF221A18)         // Primary text
-val LiceoOnSurfaceVariantLight = Color(0xFF53433F)  // Muted label text
-
-// --- Dark Palette ---
-val LiceoMaroonDarkPrimary = Color(0xFFFFB4AB)      // Light Maroon/Pink Accent
-val LiceoOnPrimaryDark = Color(0xFF560003)          // Dark text on primary
-val LiceoGoldSecondaryDark = Color(0xFFE6C18D)      // Soft Gold Accent
-val LiceoSurfaceDark = Color(0xFF1A1110)            // Dark surface background
-val LiceoOnSurfaceDark = Color(0xFFEDE0DE)          // Light text
-val LiceoOnSurfaceVariantDark = Color(0xFFD8C2BC)   // Soft label text
-
-private val LightColorScheme = lightColorScheme(
-    primary = LiceoMaroonPrimary,
-    onPrimary = LiceoOnPrimary,
-    secondary = LiceoGoldSecondary,
-    surface = LiceoSurfaceLight,
-    onSurface = LiceoOnSurfaceLight,
-    onSurfaceVariant = LiceoOnSurfaceVariantLight
-)
-
-private val DarkColorScheme = darkColorScheme(
-    primary = LiceoMaroonDarkPrimary,
-    onPrimary = LiceoOnPrimaryDark,
-    secondary = LiceoGoldSecondaryDark,
-    surface = LiceoSurfaceDark,
-    onSurface = LiceoOnSurfaceDark,
-    onSurfaceVariant = LiceoOnSurfaceVariantDark
-)
-
-@Composable
-fun ProfileCardLabTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-    MaterialTheme(
-        colorScheme = colorScheme,
-        content = content
-    )
-}
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.ui.theme.MySocialTheme
+import com.liceo.mysocial.ui.ProfileScreen
+import com.liceo.mysocial.ui.AppViewModelFactory
+import com.liceo.mysocial.ui.PostsScreen
+import com.liceo.mysocial.ui.PostsViewModel
+import com.liceo.mysocial.ui.ThemeViewModel
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         setContent {
-            ProfileCardLabTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.surface
-                ) {
-                    ProfileScreen()
-                }
+
+            val factory = AppViewModelFactory(
+                applicationContext
+            )
+
+            val postsVm: PostsViewModel =
+                viewModel(factory = factory)
+
+            val themeVm: ThemeViewModel =
+                viewModel(factory = factory)
+
+            val darkTheme by themeVm.isDarkTheme
+                .collectAsStateWithLifecycle()
+
+            MySocialTheme(
+                darkTheme = darkTheme,
+                dynamicColor = false
+            ) {
+                MySocialApp(
+                    postsVm = postsVm,
+                    themeVm = themeVm
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MySocialApp(
+    postsVm: PostsViewModel,
+    themeVm: ThemeViewModel
+) {
+
+    var tab by rememberSaveable {
+        mutableIntStateOf(0)
+    }
+
+    Scaffold(
+
+        bottomBar = {
+
+            NavigationBar {
+
+                NavigationBarItem(
+                    selected = tab == 0,
+
+                    onClick = {
+                        tab = 0
+                    },
+
+                    icon = {
+                        Icon(
+                            Icons.Default.Home,
+                            contentDescription = null
+                        )
+                    },
+
+                    label = {
+                        Text("Posts")
+                    }
+                )
+
+                NavigationBarItem(
+                    selected = tab == 1,
+
+                    onClick = {
+                        tab = 1
+                    },
+
+                    icon = {
+                        Icon(
+                            Icons.Default.Person,
+                            contentDescription = null
+                        )
+                    },
+
+                    label = {
+                        Text("Profile")
+                    }
+                )
+            }
+        }
+
+    ) { padding ->
+
+        Box(
+            modifier = Modifier.padding(padding)
+        ) {
+
+            if (tab == 0) {
+                PostsScreen(postsVm = postsVm)
+            } else {
+                ProfileScreen(postsVm = postsVm, themeVm = themeVm)
             }
         }
     }
